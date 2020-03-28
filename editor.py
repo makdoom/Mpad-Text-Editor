@@ -1,7 +1,8 @@
 
 from tkinter import *
 from tkinter import ttk
-from tkinter import font, colorchooser
+from tkinter import font, colorchooser, filedialog, messagebox
+import os
 
 root =Tk()
 root.geometry('800x600+100+100')
@@ -188,9 +189,11 @@ txtEditor.configure(font=("Fira Code Medium", 12))
 statusbar = Label(root, text="Status Bar")
 statusbar.pack(side=BOTTOM, fill=X)
 
+textChanged = False
 def changed(event):
+    global textChanged
     if txtEditor.edit_modified():
-        textChnaged = True
+        textChanged = True
         words = len(txtEditor.get(1.0, 'end-1c').split(" "))
         charachters = len(txtEditor.get(1.0,'end-1c'))
         statusbar.config(text=f"Chrachters: {charachters}   Words: {words}")
@@ -204,13 +207,88 @@ txtEditor.configure(padx=5,pady=5)
 
 ############################ MAIN MENU FUNCTIONALITY ################################# 
 
+URL = ''
+### NEW FILE FUNCTIONALITY 
+def newFile():
+    global URL
+    URL = ''
+    txtEditor.delete(1.0, END)
 
 ####  FILES COMMMANDS
-file.add_command(label="New", compound=LEFT, accelerator="Ctrl+N")
-file.add_command(label="Open", compound=LEFT, accelerator="Ctrl+O")
-file.add_command(label="Save", compound=LEFT, accelerator="Ctrl+S")
-file.add_command(label="Save As", compound=LEFT, accelerator="Ctrl+Shift+S")
-file.add_command(label="Exit", compound=LEFT, accelerator="Ctrl+Q")
+file.add_command(label="New", compound=LEFT, accelerator="Ctrl+N", command=newFile)
+
+ ## OPEN FILE FUNCTIONALITY
+def openFile():
+    global URL
+    URL = filedialog.askopenfilename(initialdir=os.getcwd(), title='Open File', filetypes=(('Text File', '*.txt'), ('All Files', '*.*')))
+    try:
+        with open(URL, 'r') as fptr:
+            txtEditor.delete(1.0, END)
+            txtEditor.insert(1.0, fptr.read())
+    except FileNotFoundError:
+        return 
+    except:
+        return 
+    root.title(os.path.basename(URL)) 
+file.add_command(label="Open", compound=LEFT, accelerator="Ctrl+O", command=openFile)
+
+### SAVE FILE
+def saveFile():
+    global URL
+    try:
+        if URL:
+            content = str(txtEditor.get(1.0, END))
+            with open(URL,'w', encoding='utf-8') as fptr:
+                fptr.write(content)
+        else:
+            URL = filedialog.asksaveasfile(mode='w',defaultextension='.txt', title='Open File', filetypes=(('Text File', '*.txt'), ('All Files', '*.*')))
+            content2 = txtEditor.get(1.0, END)
+            URL.write(content2)
+            URL.close()
+    except:
+        return
+
+file.add_command(label="Save", compound=LEFT, accelerator="Ctrl+S",command=saveFile)
+
+### SAVE AS FUNCITNALITY
+def saveAsFile():
+    global URL
+    try:
+        content = txtEditor.get(1.0, END)
+        URL = filedialog.asksaveasfile(mode='w',defaultextension='.txt', title='Open File', filetypes=(('Text File', '*.txt'), ('All Files', '*.*')))
+        URL.write(content)
+        URL.close()
+    except:
+        return
+file.add_command(label="Save As", compound=LEFT, accelerator="Ctrl+Shift+S", command=saveAsFile)
+
+### EXIT FUCNTINALITY
+def exitFunc():
+    global URL, textChanged
+    print(textChanged)
+    try:
+        if textChanged:
+            msgBox = messagebox.askyesnocancel('Warning', 'Do you want to save the file ?')
+            if msgBox == True:
+                if URL:
+                    content = txtEditor.get(1.0, END)
+                    with open(URL,'w',encoding='utf-8') as fptr:
+                        fptr.writ(content)
+                        root.destroy()
+                else:
+                    content2 = str(txtEditor.get(1.0, END))
+                    URL = filedialog.asksaveasfile(mode='w',defaultextension='.txt', title='Open File', filetypes=(('Text File', '*.txt'), ('All Files', '*.*')))
+                    URL.write(content2)
+                    URL.close()
+                    root.destroy()
+            elif msgBox == False:
+                root.destroy()
+        else:
+            root.destroy()
+    except:
+        return
+
+file.add_command(label="Exit", compound=LEFT, accelerator="Ctrl+Q",command=exitFunc)
 
 # EDIT COMMANDS
 edit.add_command(label="Copy", compound=LEFT, accelerator="Ctrl+C" )
