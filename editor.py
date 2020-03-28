@@ -1,9 +1,9 @@
 
 from tkinter import *
 from tkinter import ttk
-from tkinter import font
+from tkinter import font, colorchooser
 
-root = Tk()
+root =Tk()
 root.geometry('800x600+100+100')
 root.title("Mpad Editor")
 
@@ -75,8 +75,8 @@ fontColorBtn.grid(row=0, column=5,padx=5)
 
 ### Aligne left 
 alignLeftIcon = PhotoImage(file='icons/left.png')
-alignLeft = Button(toolbar, image=alignLeftIcon)
-alignLeft.grid(row=0, column=6,padx=3)
+alignLeftBtn = Button(toolbar, image=alignLeftIcon)
+alignLeftBtn.grid(row=0, column=6,padx=3)
 
 ##align center
 alignCenterIcon = PhotoImage(file='icons/center.png')
@@ -88,10 +88,6 @@ alignRightIcon = PhotoImage(file='icons/right.png')
 alignRightBtn = Button(toolbar, image=alignRightIcon,height=22,width=22)
 alignRightBtn.grid(row=0, column=8,padx=3)
 
-###Align justify
-alignJustifyIcon = PhotoImage(file='icons/justify.png')
-alignJustifyBtn = Button(toolbar, image=alignJustifyIcon,height=22,width=22)
-alignJustifyBtn.grid(row=0, column=9,padx=3)
 
 ############################# END OF TOOL BAR  ###########################
 
@@ -125,6 +121,64 @@ def changeSize(root):
     txtEditor.configure(font=(currentFontFamily, currentFontSize))
 fontSize.bind('<<ComboboxSelected>>', changeSize)
 
+# Bold Button FUNCTIONALITY
+def toBold():
+    txtProperties = font.Font(font=txtEditor['font'])
+    if txtProperties.actual()['weight'] == 'normal':
+        txtEditor.configure(font=(currentFontFamily, currentFontSize,'bold'))
+    if txtProperties.actual()['weight'] == 'bold':
+        txtEditor.configure(font=(currentFontFamily, currentFontSize,'normal'))
+boldBtn.configure(command=toBold)
+
+# Italic Button FUNCTIONALITY
+def toItalic():
+    txtProperties = font.Font(font=txtEditor['font'])
+    if txtProperties.actual()['slant'] == 'roman':
+        txtEditor.configure(font=(currentFontFamily, currentFontSize,'italic'))
+    if txtProperties.actual()['slant'] == 'italic':
+        txtEditor.configure(font=(currentFontFamily, currentFontSize,'roman'))
+italicBtn.configure(command=toItalic)
+
+# underline Button FUNCTIONALITY
+def toUnderline():
+    txtProperties = font.Font(font=txtEditor['font'])
+    if txtProperties.actual()['underline'] == 0:
+        txtEditor.configure(font=(currentFontFamily, currentFontSize,'underline'))
+    if txtProperties.actual()['underline'] == 1:
+        txtEditor.configure(font=(currentFontFamily, currentFontSize, 'normal'))
+underlineBtn.configure(command=toUnderline)
+
+## font color choooser
+def colorChooser():
+    color = colorchooser.askcolor()
+    txtEditor.configure(fg=color[1])
+fontColorBtn.configure(command=colorChooser) 
+##############  ALIGN FUNCTIONALITY ################
+
+###LEFT ALIGN
+def leftAlign():
+    content = txtEditor.get(1.0, 'end')
+    txtEditor.tag_config('left',justify=LEFT)
+    txtEditor.delete(1.0, END)
+    txtEditor.insert(INSERT, content, 'left')
+alignLeftBtn.configure(command=leftAlign)
+
+###cemnter ALIGN
+def centerAlign():
+    content = txtEditor.get(1.0, 'end')
+    txtEditor.tag_config('center',justify=CENTER)
+    txtEditor.delete(1.0, END)
+    txtEditor.insert(INSERT, content, 'center')
+alignCenterBtn.configure(command=centerAlign)
+
+###rIGHT ALIGN
+def rightAlign():
+    content = txtEditor.get(1.0, 'end')
+    txtEditor.tag_config('right',justify=RIGHT)
+    txtEditor.delete(1.0, END)
+    txtEditor.insert(INSERT, content, 'right')
+alignRightBtn.configure(command=rightAlign)
+
 txtEditor.configure(font=("Fira Code Medium", 12))
 
 ############################# END OF TEXT EDITOR ###########################
@@ -134,7 +188,16 @@ txtEditor.configure(font=("Fira Code Medium", 12))
 statusbar = Label(root, text="Status Bar")
 statusbar.pack(side=BOTTOM, fill=X)
 
+def changed(event):
+    if txtEditor.edit_modified():
+        textChnaged = True
+        words = len(txtEditor.get(1.0, 'end-1c').split(" "))
+        charachters = len(txtEditor.get(1.0,'end-1c'))
+        statusbar.config(text=f"Chrachters: {charachters}   Words: {words}")
+    txtEditor.edit_modified(False)
+txtEditor.bind('<<Modified>>', changed)
 
+txtEditor.configure(padx=5,pady=5)
 
 ############################# END OF STATUS NBAR ###########################
 
