@@ -9,6 +9,7 @@ verify_ssl = true
 tkinter = "*"
 pyinstaller = "*"
 pylint = "*"
+cx-freeze = {path = "./cx_Freeze-6.1-cp37-cp37m-win32.whl"}
 
 [requires]
 python_version = "3.7"
