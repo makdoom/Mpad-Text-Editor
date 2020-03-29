@@ -1,6 +1,5 @@
 # Mpad-Text-Editor
-Text Editor using tkinter module from python
-In order to install the Editor run the Mpad setup.exe file
+Text Editor using tkinter module from python. In order to install the Editor run the Mpad setup.exe file.
 
 ## Features
 
