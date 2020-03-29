@@ -19,7 +19,7 @@ Text Editor using tkinter module from python
 ###### Background Color
 - [x] Change background color with contrast of text
 - [x] Default
-- [x] Light Plu
+- [x] Light Plus
 - [x] Dark
 - [x] Red
 - [x] Monokai
