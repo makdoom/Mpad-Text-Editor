@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['Mpad.py'],
-             pathex=['D:\\Projects\\Mpad-Text-Editor'],
+             pathex=['C:\\Users\\Makdism\\Desktop\\mahek\\Mpad-Text-Editor-master'],
              binaries=[],
              datas=[],
              hiddenimports=[],

@@ -36,7 +36,7 @@ fontTuples = font.families()
 font_family = StringVar()
 fontBox = ttk.Combobox(toolbar, width=30, textvar= font_family, state='readonly')
 fontBox['values'] = fontTuples
-fontBox.current(fontTuples.index('Fira Code Medium'))
+fontBox.current(fontTuples.index('Arial'))
 fontBox.grid(row=0,column=0,padx=5)
 
 ### Size Box
@@ -96,7 +96,7 @@ scroll_Bar.config(command=txtEditor.yview)
 txtEditor.config(yscrollcommand=scroll_Bar.set)
 
 # Font Family and Font size FUNCTIONALITY
-currentFontFamily = 'Fira Code Medium'
+currentFontFamily = 'Arial'
 currentFontSize = 12
 
 ### to change the font 
@@ -171,7 +171,7 @@ def rightAlign():
     txtEditor.insert(INSERT, content, 'right')
 alignRightBtn.configure(command=rightAlign)
 
-txtEditor.configure(font=("Fira Code Medium", 12))
+txtEditor.configure(font=("Arial", 12))
 
 ############################# END OF TEXT EDITOR ###########################
 
